@@ -16,7 +16,7 @@ class PurchaseRequest(models.Model):
                               default=lambda self: self.env.user, )
     start_date = fields.Date(string="Start Date", default=fields.Date.today, )
 
-    end_date = fields.Date(string="End Date", )
+    end_date = fields.Date(string="End Date", required=True, )
     purchase_manager_group = fields.Many2many('res.users', string='Purchase Managers')
     rejection_reason = fields.Text(string="Rejection Reason", readonly=True, )
     order_lines_ids = fields.One2many(comodel_name="purchase.request.line", inverse_name="purchase_request_id",
@@ -81,3 +81,9 @@ class PurchaseRequest(models.Model):
             r.total_price = 0.0
             for line in r.order_lines_ids:
                 r.total_price += line.price
+
+    @api.constrains('start_date', 'end_date')
+    def date(self):
+        for r in self:
+            if r.start_date > r.end_date:
+                raise UserError(_('End Date must be greater than Start Date'))
