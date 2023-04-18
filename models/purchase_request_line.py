@@ -16,9 +16,6 @@ class PurchaseRequestLine(models.Model):
         for rec in self:
             rec.price = rec.quantity * rec.cost_price
 
-
     # def product_id_changes(self):
     #     for lp in self:
     #         if len(self.product_id) == 0:
-
-

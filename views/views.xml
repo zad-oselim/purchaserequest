@@ -13,7 +13,7 @@
                         <button name="button_approve" string="Approve" class="oe_highlight" states="to_be_approved"
                                 type="object"/>
 
-                        <button name="%(action_my_wizard)d" string="Reject" class="oe_highlight" states="to_be_approved"
+                        <button name="%(purchaserequest.action_my_wizard)d" string="Reject" class="oe_highlight" states="to_be_approved"
                                 type="action"/>
 
                         <button name="button_draft" string="Reset to Draft"
