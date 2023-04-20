@@ -26,6 +26,43 @@ class PurchaseRequest(models.Model):
                                         ('approve', 'Approve'), ('reject', 'Reject'),
                                         ('cancel', 'Cancel'), ], required=True, default="draft", tracking=True,
                              readonly=True, track_visibility='onchange', )
+    confirmed_po_qty = fields.Float(string='Confirmed PO Quantity', compute='_compute_confirmed_po_qty')
+
+    def _compute_confirmed_po_qty(self):
+        for request in self:
+            confirmed_qty = 0.0
+            # for po in request.order_lines_ids.filtered(lambda p: p.state == 'purchase'):
+            for po in request.order_lines_ids:
+                if request.state == "approve":
+                    for line in po.purchase_request_id:
+                        if line.product_id in request.order_lines_ids.product_id:
+                            confirmed_qty += line.quantity
+            request.confirmed_po_qty = confirmed_qty
+
+    def create_purchase_order(self):
+        PurchaseOrder = self.env['purchase.order']
+        for request in self:
+            po_vals = {
+                'purchase_request_id': request.id,
+                'purchase_request_id': []
+            }
+            for line in request.order_lines_ids:
+                remaining_qty = line.quantity - request.confirmed_po_qty
+                if remaining_qty > 0:
+                    po_vals['purchase_request_id'].append((0, 0, {
+                        'product_id': line.product_id.id,
+                        'name': line.name,
+                        'quantity': remaining_qty,
+                        'product_uom': line.product_uom_id.id,
+                        'price_unit': line.price_unit,
+                        'taxes_id': [(6, 0, line.taxes_id.ids)]
+                    }))
+            po = PurchaseOrder.create(po_vals)
+            request.order_lines_ids |= po
+
+    # def button_create_po_visible(self):
+    #     self.ensure_one()
+    #     return self.confirmed_po_qty < sum(self.mapped('order_lines_ids.quantity'))
 
     def button_draft(self):
         for r in self:
@@ -65,6 +102,11 @@ class PurchaseRequest(models.Model):
             'views': [(view_id, 'form')],
             'target': 'new',
         }
+
+    def action_report(self):
+        report = self.env.ref('purchaserequest.report_purchase_request').render(self.ids)
+        pdf = self.env['report'].pdfmerge([report])
+        return self.env['report'].report_action(pdf, 'purchase_request_report')
 
     def action_confirm_rejection(self):
         # Set the rejection reason field and reject the purchase request

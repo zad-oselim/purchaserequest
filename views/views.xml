@@ -13,7 +13,8 @@
                         <button name="button_approve" string="Approve" class="oe_highlight" states="to_be_approved"
                                 type="object"/>
 
-                        <button name="%(purchaserequest.action_my_wizard)d" string="Reject" class="oe_highlight" states="to_be_approved"
+                        <button name="%(purchaserequest.action_my_wizard)d" string="Reject" class="oe_highlight"
+                                states="to_be_approved"
                                 type="action"/>
 
                         <button name="button_draft" string="Reset to Draft"
@@ -22,6 +23,10 @@
 
                         <button name="button_cancel" string="Cancel" class="oe_highlight" states="draft"
                                 type="object"/>
+
+                        <button name="create_purchase_order" type="object"
+                                string="Create Purchase Order"/>
+
 
                         <field name="state" widget="statusbar" Clickable="False"
                                statusbar_colors="{'KEY_IS_STATE':'VALUE_IS_COLOR'}"
@@ -80,6 +85,7 @@
             <field name="res_model">purchase.request</field>
             <field name="view_mode">tree,form</field>
         </record>
+
         <!-- This Menu Item must have a parent and an action -->
         <menuitem id="purchase_request_category" name="Purchase Request" parent="purchase.menu_procurement_management"
                   action="purchase_request_action" sequence="-1"/>

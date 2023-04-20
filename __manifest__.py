@@ -27,6 +27,7 @@
         'security/ir.model.access.csv',
         'wizard/my_wizard_view.xml',
         'views/views.xml',
+        'reports/report.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
