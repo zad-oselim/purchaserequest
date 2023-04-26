@@ -10,11 +10,12 @@
                         <button name="button_to_be_approved" string="Submit for Approval" class="oe_highlight"
                                 states="draft" type="object"/>
 
-                        <button name="button_approve" string="Approve" class="oe_highlight" states="to_be_approved"
+                        <button name="button_approve" string="Approve" class="oe_highlight"
+                                states="to_be_approved"
                                 type="object"/>
 
                         <button name="%(purchaserequest.action_my_wizard)d" string="Reject" class="oe_highlight"
-                                states="to_be_approved"
+                                states="to_be_approved,reject"
                                 type="action"/>
 
                         <button name="button_draft" string="Reset to Draft"
@@ -23,10 +24,7 @@
 
                         <button name="button_cancel" string="Cancel" class="oe_highlight" states="draft"
                                 type="object"/>
-
-                        <button name="create_purchase_order" type="object"
-                                string="Create Purchase Order"/>
-
+                        <button name="create_purchase_order" string="Purchase Order" states="approve" type="object"/>
 
                         <field name="state" widget="statusbar" Clickable="False"
                                statusbar_colors="{'KEY_IS_STATE':'VALUE_IS_COLOR'}"
@@ -52,9 +50,14 @@
                                     <field name="price"/>
                                 </tree>
                             </field>
+
                             <field name="total_price"/>
-                            <field name="rejection_reason" decoration-danger="1"
-                                   attrs="{'invisible': [('state','!=','reject')]}"/>
+                            <field calss=".my-class" name="rejection_reason_ids" decoration-danger="1"
+                                   attrs="{'invisible': [('state','!=','reject')]}">
+                                <tree editable="bottom">
+                                    <field name="rejection_reason"/>
+                                </tree>
+                            </field>
 
 
                         </group>
@@ -78,7 +81,6 @@
                 </tree>
             </field>
         </record>
-
         <record id="purchase_request_action" model="ir.actions.act_window">
             <field name="name">Purchase Request</field>
             <field name="type">ir.actions.act_window</field>
@@ -87,7 +89,8 @@
         </record>
 
         <!-- This Menu Item must have a parent and an action -->
-        <menuitem id="purchase_request_category" name="Purchase Request" parent="purchase.menu_procurement_management"
+        <menuitem id="purchase_request_category" name="Purchase Request"
+                  parent="purchase.menu_procurement_management"
                   action="purchase_request_action" sequence="-1"/>
 
 

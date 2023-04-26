@@ -20,14 +20,15 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'purchase', 'mail', ],
+    'depends': ['base', 'purchase', 'mail', 'sale', ],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
         'wizard/my_wizard_view.xml',
+        'reports/pr_report.xml',
+        'reports/pr_template.xml',
         'views/views.xml',
-        'reports/report.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
