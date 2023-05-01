@@ -8,7 +8,7 @@ from odoo.exceptions import UserError, ValidationError
 # noinspection PyTypeChecker
 class PurchaseRequest(models.Model):
     _name = 'purchase.request'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', ]
     _rec_name = 'request_name'
 
     request_name = fields.Char(string="Request Name", required=True, )
@@ -17,8 +17,7 @@ class PurchaseRequest(models.Model):
     start_date = fields.Date(string="Start Date", default=fields.Date.today, )
 
     end_date = fields.Date(string="End Date", required=True, )
-    # purchase_manager_group = fields.Many2many('res.users', string='Purchase Managers')
-    # rejection_reason = fields.Text(string="Rejection Reason", readonly=True, )
+
     rejection_reason_ids = fields.One2many(comodel_name="my.wizard", inverse_name="rejection_reason_id",
                                            string="Rejection Reasons", required=False, )
     order_lines_ids = fields.One2many(comodel_name="purchase.request.line", inverse_name="purchase_request_id",
@@ -29,15 +28,53 @@ class PurchaseRequest(models.Model):
                                         ('cancel', 'Cancel'), ], required=True, default="draft", tracking=True,
                              readonly=True, track_visibility='onchange', )
 
-    def create_purchase_order(self):
-        return {
-            'name': _('New Quotation'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'purchase.order',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'target': 'new',
-        }
+    # confirmed_po_qty = fields.Float(string='Confirmed PO Quantity', compute='_compute_confirmed_po_qty')
+
+
+
+    #
+    # def create_purchase_order(self):
+    #     PurchaseOrder = self.env['purchase.order']
+    #     for request in self:
+    #         po_vals = {
+    #             'partner_id': request.partner_id.id,
+    #             'currency_id': request.currency_id.id,
+    #             'purchase_request_id': request.id,
+    #             'order_line': []
+    #         }
+    #         for line in request.order_lines_ids:
+    #             remaining_qty = line.quantity - request.confirmed_po_qty
+    #             if remaining_qty > 0:
+    #                 po_vals['order_line'].append((0, 0, {
+    #                     'product_id': line.product_id.id,
+    #                     'description': line.description,
+    #                     'quantity': remaining_qty,
+    #                     'cost_price': line.cost_price,
+    #                     'price': line.price,
+    #                     # 'product_uom': line.product_uom_id.id,
+    #                     # 'price_unit': line.price_unit,
+    #                     'taxes_id': [(6, 0, line.taxes_id.ids)]
+    #                 }))
+    #         po = PurchaseOrder.create(po_vals)
+    #         request.po_ids |= po
+    #
+    # def button_create_po_visible(self):
+    #     self.ensure_one()
+    #     return self.confirmed_po_qty < sum(self.mapped('order_lines_ids.quantity'))
+    # --------------------------------------------------------------------------------------------------
+    # def create_purchase_order(self):
+    #     request_line = self.env['purchase.request.line'].search([('id', '=', self.purchase_request_line_id)])
+    #     product_id_value = request_line.product_id.id
+    #     return {
+    #         'name': _('New Quotation'),
+    #         'type': 'ir.actions.act_window',
+    #         'res_model': 'purchase.order',
+    #         'view_type': 'form',
+    #         'view_mode': 'form',
+    #         'target': 'new',
+    #         'product_id': product_id_value,
+    #         'description': request_line.product_id.name,
+    #     }
 
     def button_draft(self):
         for r in self:

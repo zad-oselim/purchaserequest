@@ -4,21 +4,36 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
                 <t t-call="web.basic_layout">
+                    <style>
+                        .co{
+                        font-size:30px;
+                        color:white;
+                        background-color:#da8b92;
+                        margin-bottom:20px;
+                        text-align:center;
+                        }
+                        .highlite{
+                        background-color:#92c4a3;
+                        margin-left:20px;
+                        }
+                        .a{
+                        font-size:25px;
+                        font-weight:bold;
+                        text-align:right;
+                        margin-bottom:95px;}
+                    </style>
                     <div class="page">
-                        <div class="row">
-                            <div class="col-xs-6 oe_structure">
-                                <h2>Purchase Request</h2>
-                            </div>
-                            <div class="col-xs-6 text-right">
-                                <p>
-                                    from
-                                    <span t-field="doc.start_date"/>
-                                    to
-                                    <span t-field="doc.end_date"/>
-                                </p>
-                                <span t-field="doc.total_price"/>
-
-                            </div>
+                        <div>
+                            <h2 class="co">Purchase Request</h2>
+                        </div>
+                        <div style="text-align:left; margin-top:30px">
+                            <p>
+                                <span>from</span>
+                                <span class="highlite" t-field="doc.start_date"/>
+                                <br/>
+                                <span>to</span>
+                                <span style="margin-left:39px;" class="highlite" t-field="doc.end_date"/>
+                            </p>
                         </div>
                         <table class="table table-striped">
                             <thead>
@@ -50,6 +65,11 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div class="a">
+                            <span>Total Price</span>
+                            <span t-field="doc.total_price"/>
+                        </div>
+
                         <div class="row">
                             <div class="col-xs-6">
                                 <h4>Additional Information:</h4>
@@ -58,9 +78,8 @@
                                     <span t-field="doc.state"/>
                                 </p>
                                 <p>
-                                    <strong>Rejection Reason:</strong>
+                                    <strong>Rejection Reasons:</strong>
                                     <span t-if="doc.state=='reject'" t-field="doc.rejection_reason"/>
-
                                 </p>
                             </div>
                         </div>

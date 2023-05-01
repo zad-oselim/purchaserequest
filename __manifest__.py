@@ -26,6 +26,7 @@
     'data': [
         'security/ir.model.access.csv',
         'wizard/my_wizard_view.xml',
+        'po_wizard/po_wizard.xml',
         'reports/pr_report.xml',
         'reports/pr_template.xml',
         'views/views.xml',

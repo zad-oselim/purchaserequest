@@ -24,7 +24,9 @@
 
                         <button name="button_cancel" string="Cancel" class="oe_highlight" states="draft"
                                 type="object"/>
-                        <button name="create_purchase_order" string="Purchase Order" states="approve" type="object"/>
+
+                        <button name="%(purchaserequest.action_po_wizard)d" string="Purchase Order" states="approve"
+                                type="action"/>
 
                         <field name="state" widget="statusbar" Clickable="False"
                                statusbar_colors="{'KEY_IS_STATE':'VALUE_IS_COLOR'}"
